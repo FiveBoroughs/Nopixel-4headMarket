@@ -6,7 +6,7 @@ export default function Header() {
   const [randomName, setRandomName] = useState("*****");
 
   useEffect(() => {
-    const names = ["4HEAD", "TUBBY", "FATTY", "DRAKE#1FANBOY","xX_DAFINGUS_Xx", "BALDIE", "SOUTHSIDETEDDYBEAR", "MYMAN_MYMAN", "*****", "JAMESONELIZABETHPITTSSOZE"]
+    const names = ["4HEAD", "TUBBY", "FATTY", "DRAKE#1FANBOY","xX_DAFINGUS_Xx", "BALDIE", "SOUTHSIDE TEDDYBEAR", "MYMAN_MYMAN", "*****", "JAMESON ELIZABETH PITTS SOZE"]
     setRandomName(names[Math.floor(Math.random() * names.length)]);
   }, []);
 
