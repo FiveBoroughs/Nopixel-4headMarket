@@ -1,0 +1,50 @@
+[
+  {
+    "id": "assault-shotgun",
+    "title": "Assault shotgun",
+    "price": 90000,
+    "image": "/images/products/images_gta-5_weapons_shotguns_assault-shotgun.webp",
+    "warning": "No questions asked"
+  },
+  {
+    "id": "combat-shotgun",
+    "title": "Combat shotgun",
+    "price": 15000,
+    "image": "/images/products/images_gta-5_weapons_shotguns_combat-shotgun.webp",
+    "warning": "Handle with extreme caution"
+  },
+  {
+    "id": "pump-shotgun-mk2",
+    "title": "Pump shotgun mk2",
+    "price": 12000,
+    "image": "/images/products/images_gta-5_weapons_shotguns_pump-shotgun-mk2.webp",
+    "warning": "The Big Dog's favorite"
+  },
+  {
+    "id": "pump-shotgun",
+    "title": "Pump shotgun",
+    "price": 70000,
+    "image": "/images/products/images_gta-5_weapons_shotguns_pump-shotgun.webp",
+    "warning": "Handle with extreme caution"
+  },
+  {
+    "id": "sweeper-shotgun",
+    "title": "Sweeper shotgun",
+    "price": 10200,
+    "image": "/images/products/images_gta-5_weapons_shotguns_sweeper-shotgun.webp",
+    "warning": "Handle with extreme caution"
+  },
+  {
+    "id": "bullpup-shotgun",
+    "title": "Bullpup shotgun",
+    "price": 20000,
+    "image": "/images/products/images_gta-5_weapons_shotguns_bullpup-shotgun.webp",
+    "warning": "Handle with extreme caution"
+  },
+  {
+    "id": "heavy-shotgun",
+    "title": "Heavy shotgun",
+    "price": 10000,
+    "image": "/images/products/heavy-shotgun.png"
+  }
+]
