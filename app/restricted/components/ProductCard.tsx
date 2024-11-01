@@ -37,7 +37,7 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
         <div className="p-4">
           <h3 className="text-[#39ff14] toxic-shadow text-xl mb-2">{title}</h3>
           <p className="text-[#39ff14] toxic-shadow text-3xl font-bold mb-4">
-            ${price.toFixed(2)}
+            ${price.toLocaleString('en-US', { maximumFractionDigits: 0 })}
           </p>
         </div>
       </div>

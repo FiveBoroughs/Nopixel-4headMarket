@@ -2,8 +2,12 @@ import './globals.css';
 import { Metadata } from 'next';
 import { JetBrains_Mono } from 'next/font/google';
 import UmamiProvider from 'next-umami'
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 const jetbrains = JetBrains_Mono({ subsets: ['latin'] });
+
+const umamiWebsiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
+const umamiSrc = process.env.NEXT_PUBLIC_UMAMI_SRC;
 
 export const metadata: Metadata = {
   title: '[ RESTRICTED ACCESS ]',
@@ -19,11 +23,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <UmamiProvider websiteId="0cd6a32c-8faf-42a1-9ff5-dda3e495af3d" src="https://u.pinescripters.io/script.js" />
+        <UmamiProvider websiteId={umamiWebsiteId || "undefined"} src={umamiSrc} />
       </head>
       <body className={jetbrains.className}>
-        <div className="grain" />
-        {children}
+        <ErrorBoundary>
+          <div className="grain" />
+          {children}
+        </ErrorBoundary>
       </body>
     </html>
   );
