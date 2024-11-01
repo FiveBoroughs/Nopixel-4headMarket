@@ -32,8 +32,6 @@ export async function getProducts(): Promise<Product[]> {
     throw new Error('Missing Airtable configuration');
   }
 
-  console.log(baseId, tableId, apiKey)
-
   const response = await fetch(
     `https://api.airtable.com/v0/${baseId}/${tableId}`,
     {
