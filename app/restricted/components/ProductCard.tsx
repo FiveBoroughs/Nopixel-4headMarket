@@ -10,10 +10,15 @@ interface ProductCardProps {
   price: number;
   image: string;
   warning?: string;
+  categories?: string[];
+  sort?: number;
+  enabled: boolean;
+  show_price: boolean;
+  group?: string[];
 }
 
 const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
-  ({ id, title, price, image, warning }, ref) => {
+  ({ id, title, price, image, warning, categories, sort, enabled, show_price, group }, ref) => {
     return (
       <div
         ref={ref}
@@ -36,10 +41,21 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
 
         <div className="p-4">
           <h3 className="text-[#39ff14] toxic-shadow text-xl mb-2">{title}</h3>
-          <p className="text-[#39ff14] toxic-shadow text-3xl font-bold mb-4">
-            ${price.toLocaleString('en-US', { maximumFractionDigits: 0 })}
-          </p>
-        </div>
+          {show_price ? (
+            <p className="text-[#39ff14] toxic-shadow text-3xl font-bold mb-4">
+              ${price.toLocaleString('en-US', { maximumFractionDigits: 0 })}
+            </p>
+          ) : (
+            <div className="relative">
+              <p className="text-[#39ff14] toxic-shadow text-3xl font-bold blur-sm mb-4 relative">
+                <span className="relative">
+                  ${price.toLocaleString('en-US', { maximumFractionDigits: 0 }).replace(/\d/g, '#')}
+                  <span className="absolute left-0 top-1/2 w-full h-2 bg-red-500 -rotate-12 origin-center blur-none"></span>
+                </span>
+              </p>
+            </div>
+          )}
+          </div>
       </div>
     );
   }

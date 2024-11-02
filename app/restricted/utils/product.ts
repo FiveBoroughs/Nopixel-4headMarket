@@ -6,6 +6,9 @@ export type Product = {
   warning?: string;
   categories?: string[];
   sort?: number;
+  enabled: boolean;
+  show_price: boolean;
+  group?: string[];
 };
 
 type AirtableResponse = {
@@ -19,6 +22,8 @@ type AirtableResponse = {
       categories?: string[];
       sort: number;
       enabled: boolean;
+      show_price: boolean;
+      group?: string[];
     };
   }>;
 };

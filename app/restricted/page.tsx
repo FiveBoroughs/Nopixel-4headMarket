@@ -106,6 +106,11 @@ export default function RestrictedPage() {
                   price={product.price}
                   image={product.image}
                   warning={product.warning}
+                  enabled={product.enabled}
+                  show_price={product.show_price}
+                  categories={product.categories}
+                  group={product.group}
+                  sort={product.sort}
                 />
               ))}
             </div>
