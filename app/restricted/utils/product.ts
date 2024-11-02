@@ -2,12 +2,14 @@ export type Product = {
   id: string;
   title: string;
   price: number;
+  show_price: boolean;
+  stock: number;
+  show_stock: boolean;
   image: string;
   warning?: string;
   categories?: string[];
   sort?: number;
   enabled: boolean;
-  show_price: boolean;
   group?: string[];
 };
 
@@ -17,12 +19,14 @@ type AirtableResponse = {
     fields: {
       title: string;
       price: number;
+      show_price: boolean;
+      stock: number;
+      show_stock: boolean;
       image: string;
       warning?: string;
       categories?: string[];
       sort: number;
       enabled: boolean;
-      show_price: boolean;
       group?: string[];
     };
   }>;

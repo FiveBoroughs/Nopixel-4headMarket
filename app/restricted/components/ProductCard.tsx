@@ -1,6 +1,6 @@
 "use client";
 
-import { DollarSign, AlertTriangle } from 'lucide-react';
+import { AlertTriangle, Package } from 'lucide-react';
 import Image from 'next/image';
 import { forwardRef } from 'react';
 
@@ -8,17 +8,19 @@ interface ProductCardProps {
   id: number;
   title: string;
   price: number;
+  show_price: boolean;
+  stock: number;
+  show_stock: boolean;
   image: string;
   warning?: string;
   categories?: string[];
   sort?: number;
   enabled: boolean;
-  show_price: boolean;
   group?: string[];
 }
 
 const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
-  ({ id, title, price, image, warning, categories, sort, enabled, show_price, group }, ref) => {
+  ({ id, title, price, show_price, stock, show_stock, image, warning, categories, sort, enabled, group }, ref) => {
     return (
       <div
         ref={ref}
@@ -36,6 +38,14 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
             <AlertTriangle className="w-5 h-5 text-black" />
             <span className="font-mono">{warning}</span>
           </div>
+          )}
+          {show_stock && (
+            <div className="absolute top-2 left-2 bg-black/50 px-2 py-1 rounded-full flex items-center gap-1">
+              <Package className="w-3 h-3 text-[#39ff14]" />
+              <p className="text-[#39ff14] text-xs">
+                {stock}+
+              </p>
+            </div>
           )}
         </div>
 
@@ -55,6 +65,11 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
               </p>
             </div>
           )}
+          {/* {show_stock && (
+            <p className="text-[#39ff14] text-sm mt-2">
+              Stock: {stock} {stock === 1 ? 'unit' : 'units'} available
+            </p>
+          )} */}
           </div>
       </div>
     );

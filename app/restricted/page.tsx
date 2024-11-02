@@ -104,10 +104,12 @@ export default function RestrictedPage() {
                   id={Number(product.id)}
                   title={product.title}
                   price={product.price}
+                  show_price={product.show_price}
+                  stock={product.stock}
+                  show_stock={product.show_stock}
                   image={product.image}
                   warning={product.warning}
                   enabled={product.enabled}
-                  show_price={product.show_price}
                   categories={product.categories}
                   group={product.group}
                   sort={product.sort}
