@@ -22,14 +22,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <UmamiProvider websiteId={umamiWebsiteId || "undefined"} src={umamiSrc} />
-      </head>
       <body className={jetbrains.className}>
-        <ErrorBoundary>
-          <div className="grain" />
-          {children}
-        </ErrorBoundary>
+        <UmamiProvider
+          websiteId={umamiWebsiteId || ''}
+          src={umamiSrc || ''} >
+          <ErrorBoundary>
+            <div className="grain" />
+            {children}
+          </ErrorBoundary>
+        </UmamiProvider>
       </body>
     </html>
   );

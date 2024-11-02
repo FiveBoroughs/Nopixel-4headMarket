@@ -1,8 +1,5 @@
 "use client";
-
 import { useState, useEffect, useRef } from 'react';
-import { useUmami } from 'next-umami'
-
 
 let EMOJI_GRID = shuffleArray([
   '🐈', '🌟', '🦊', '🐕', '💀',
@@ -23,11 +20,9 @@ function shuffleArray(emoji_grid: string[]): string[] {
 export default function EmojiPuzzle() {
   const [selected, setSelected] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const umami = useUmami();
   const pressSound = useRef<HTMLAudioElement | null>(null);
   const successSound = useRef<HTMLAudioElement | null>(null);
   const errorSound = useRef<HTMLAudioElement | null>(null);
-
 
   useEffect(() => {
     pressSound.current = new Audio('/sounds/select.mp3');
@@ -77,8 +72,6 @@ export default function EmojiPuzzle() {
         }
         setIsLoading(false);
       }
-
-      umami.event('emoji-grid_selected', { selected: newSelected.join(',') });
     } catch (err) {
       console.error('Error in emoji selection:', err);
       setIsLoading(false);
@@ -88,7 +81,6 @@ export default function EmojiPuzzle() {
 
   return (
     <div >
-      {/* Add loading overlay */}
       {isLoading && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="text-[#39ff14] animate-pulse">PROCESSING...</div>
