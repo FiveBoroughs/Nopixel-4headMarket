@@ -1,38 +1,66 @@
 "use client";
 import { useState, useEffect, useRef } from 'react';
+import { DecryptSequence, getDecryptSequence } from '../utils/decryptSequence'
 
-let EMOJI_GRID = shuffleArray([
-  '🐈', '🌟', '🦊', '🐕', '💀',
-  '🌙', '🔥', '🦁', '🎭', '🐍',
-  '👾', '🎪', '🦇', '🎡', '🐘',
-  '🌋', '🗿', '🦖', '🐪', '🎢',
-  '🎠', '🦅', '📏', '🐋', '🦕'
-]);
+let BASE_EMOJI_GRID = [
+  '🐈', '🌟', '🦊', '🐕', '💀', '🌙', '🔥', '🦁', '🎭', '🐍',
+  '👾', '🎪', '🦇', '🎡', '🐘', '🌋', '🗿', '🦖', '🐪', '🎢',
+  '🎠', '🦅', '📏', '🐋', '🦕', '🌈', '🎨', '🎯', '🎲', '🎸',
+  '🌺', '🍄', '🦚', '🦈', '🦩', '🦒', '🦘', '🦫', '🦥', '🦦',
+  '🦡', '🦨', '🦔', '🦃', '🦢', '🦜', '🦤', '🦋', '🐌', '🐞'
+];
 
 function shuffleArray(emoji_grid: string[]): string[] {
-  for (let i = emoji_grid.length - 1; i > 0; i--) {
+  // Create a copy to avoid mutating the original array
+  let shuffled = [...emoji_grid];
+  for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [emoji_grid[i], emoji_grid[j]] = [emoji_grid[j], emoji_grid[i]];
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
-  return emoji_grid;
+  return shuffled;
 }
 
 export default function EmojiPuzzle() {
   const [selected, setSelected] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [dailyPassword, setDailyPassword] = useState<{ emoji_1: string; emoji_2: string }>({ emoji_1: "🐕", emoji_2: "📏" });
   const pressSound = useRef<HTMLAudioElement | null>(null);
   const successSound = useRef<HTMLAudioElement | null>(null);
   const errorSound = useRef<HTMLAudioElement | null>(null);
+  const [emojiGrid, setEmojiGrid] = useState<string[]>([]); // Add this line
 
   useEffect(() => {
     pressSound.current = new Audio('/sounds/select.mp3');
     successSound.current = new Audio('/sounds/success.mp3');
     errorSound.current = new Audio('/sounds/error.mp3');
+
+    const fetchSequence = async () => {
+      const decryptSequence = await getDecryptSequence();
+      setDailyPassword(decryptSequence);
+
+      // Create a set of available emojis (excluding password emojis)
+      let availableEmojis = new Set(BASE_EMOJI_GRID);
+      availableEmojis.delete(decryptSequence.emoji_1);
+      availableEmojis.delete(decryptSequence.emoji_2);
+      // Convert to array and shuffle
+      let shuffledBase = shuffleArray(Array.from(availableEmojis));
+
+      // Take first 23 unique emojis
+      let finalGrid = shuffledBase.slice(0, 23);
+
+      // Add the daily password emojis
+      finalGrid.push(decryptSequence.emoji_1, decryptSequence.emoji_2);
+
+      // Shuffle again to randomize the positions
+      setEmojiGrid(shuffleArray(finalGrid));
+    };
+
+    fetchSequence();
   }, []);
 
   const handleEmojiClick = (emoji: string) => {
     try {
-      if (isLoading) return;
+      if (isLoading || !dailyPassword) return;
       // If already selected, deselect it
       if (selected.includes(emoji)) {
         pressSound.current?.play().catch(console.error);
@@ -48,7 +76,7 @@ export default function EmojiPuzzle() {
       // Check conditions when two emojis are selected
       if (newSelected.length === 2) {
         setIsLoading(true);
-        if (newSelected[0] === '📏' && newSelected[1] === '🐕') {
+        if (newSelected[0] === dailyPassword.emoji_1 && newSelected[1] === dailyPassword.emoji_2) {
           // Success condition
           successSound.current?.play().catch(console.error);
 
@@ -89,7 +117,7 @@ export default function EmojiPuzzle() {
       <div className="mt-8 bg-black/50 p-6 border border-[#39ff14] rounded-lg backdrop-blur-sm">
         <h3 className="text-xl text-[#39ff14] toxic-shadow mb-4">DECRYPT SEQUENCE</h3>
         <div className="grid grid-cols-5 gap-4 max-w-md mx-auto">
-          {EMOJI_GRID.map((emoji, index) => (
+          {emojiGrid.map((emoji, index) => (
             <button
               key={index}
               onClick={() => handleEmojiClick(emoji)}

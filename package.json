@@ -57,6 +57,7 @@
     "next": "15.0.2",
     "next-themes": "^0.3.0",
     "next-umami": "^0.0.4",
+    "nocodb-sdk": "^0.257.2",
     "postcss": "^8.4.47",
     "react": "19.0.0-rc-02c0e824-20241028",
     "react-day-picker": "^8.10.1",

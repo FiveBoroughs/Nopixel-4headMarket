@@ -65,11 +65,11 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
               </p>
             </div>
           )}
-          {/* {show_stock && (
+          {show_stock && (
             <p className="text-[#39ff14] text-sm mt-2">
               Stock: {stock} {stock === 1 ? 'unit' : 'units'} available
             </p>
-          )} */}
+          )}
           </div>
       </div>
     );

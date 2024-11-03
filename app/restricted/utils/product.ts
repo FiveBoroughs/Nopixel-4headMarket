@@ -13,52 +13,62 @@ export type Product = {
   group?: string[];
 };
 
-type AirtableResponse = {
-  records: Array<{
-    id: string;
-    fields: {
-      title: string;
-      price: number;
-      show_price: boolean;
-      stock: number;
-      show_stock: boolean;
-      image: string;
-      warning?: string;
-      categories?: string[];
-      sort: number;
-      enabled: boolean;
-      group?: string[];
-    };
-  }>;
-};
+type nocoResponse = {
+  list: Array<{
+    Id: string;
+    title: string;
+    price: number;
+    show_price: boolean;
+    stock: number;
+    show_stock: boolean;
+    image: string;
+    warning?: string;
+    categories?: string[];
+    sort: number;
+    enabled: boolean;
+    group?: string[];
+  }>,
+  pageInfo: PaginatedType
+}
+import { Api, PaginatedType } from "nocodb-sdk";
+
+const api = new Api({
+    baseURL: "https://app.nocodb.com",
+    headers: {
+      "xc-token": process.env.NEXT_PUBLIC_NOCODB_API_KEY
+    }
+})
 
 export async function getProducts(): Promise<Product[]> {
-  const baseId = process.env.NEXT_PUBLIC_AIRTABLE_BASE_ID;
-  const tableId = process.env.NEXT_PUBLIC_AIRTABLE_TABLE_ID;
-  const apiKey = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
+  try {
+    const response = await api.dbViewRow.list(
+      "noco",
+      "pe6zgj0h0il4hd5",
+      "m6g5kr4wg9w282k",
+      "vwfou4q9md9vbghh",
+      {
+        offset: 0,
+        where: "(enabled,eq,true)"
+      }
+    );
+    const products = (response as nocoResponse).list.map(record => ({
+      id: record.Id,
+      title: record.title,
+      price: record.price,
+      show_price: record.show_price,
+      stock: record.stock,
+      show_stock: record.show_stock,
+      image: record.image,
+      warning: record.warning,
+      categories: record.categories,
+      sort: record.sort,
+      enabled: record.enabled,
+      group: record.group
+    })).filter(x => x.enabled).sort((x, y) => y.sort - x.sort);
 
-  if (!baseId || !tableId || !apiKey) {
-    throw new Error('Missing Airtable configuration');
-  }
-
-  const response = await fetch(
-    `https://api.airtable.com/v0/${baseId}/${tableId}`,
-    {
-      headers: {
-        'Authorization': `Bearer ${apiKey}`
-      },
-      cache: 'no-store'
-    }
-  );
-
-  if (!response.ok) {
+    return products;
+  } catch (error) {
+    console.error('Failed to fetch products:', error);
     throw new Error('Failed to fetch products');
   }
-
-  const data: AirtableResponse = await response.json();
-
-  return data.records.map(record => ({
-    id: record.id,
-    ...record.fields
-  })).filter(x  => x.enabled).sort((x, y) => y.sort - x.sort);
 }
