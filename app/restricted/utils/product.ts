@@ -42,11 +42,15 @@ export const GROUP_COLORS: Record<string, Group> = {
   'besties': { name: 'Besties', color: '#f472b6' },
   'sob': { name: 'SOB', color: '#64748b' },
   'cypress': { name: 'Cypress', color: '#431407' },
-  'vagos': { name: 'Vagos', color: '#facc15' },
-  'hades': { name: 'Hydra', color: '#dc2626' },
-  'cl': { name: 'Chaos Legion', color: '#4d7c0f' },
+  'vagos': { name: 'Vagos', color: '#fde047' },
+  'hades': { name: 'Hades', color: '#dc2626' },
+  'cl': { name: 'Chaos Legion', color: '#9f1239' },
   'hydra': { name: 'Hydra', color: '#4d7c0f' },
+  'saints': { name: 'Saints', color: '#fbbf24' },
   'manor': { name: 'Manor', color: '#1e40af' },
+  'kaneshiro': { name: 'Kaneshiro', color: '#fdba74' },
+  'ballas': { name: 'Ballas', color: '#6d28d9' },
+  'tripas': { name: '3PAS', color: '#57534e' },
 };
 
 import { Api, PaginatedType } from "nocodb-sdk";
