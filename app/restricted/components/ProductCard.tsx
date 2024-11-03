@@ -3,6 +3,8 @@
 import { AlertTriangle, Package } from 'lucide-react';
 import Image from 'next/image';
 import { forwardRef } from 'react';
+import { Group } from '../utils/product';
+
 
 interface ProductCardProps {
   id: number;
@@ -16,11 +18,12 @@ interface ProductCardProps {
   categories?: string[];
   sort?: number;
   enabled: boolean;
-  group?: string[];
+  groups?: Group[];
+  show_groups:boolean;
 }
 
 const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
-  ({ id, title, price, show_price, stock, show_stock, image, warning, categories, sort, enabled, group }, ref) => {
+  ({ id, title, price, show_price, stock, show_stock, image, warning, categories, sort, enabled, groups, show_groups }, ref) => {
     return (
       <div
         ref={ref}
@@ -49,7 +52,7 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           )}
         </div>
 
-        <div className="p-4">
+        <div className="p-4 relative">
           <h3 className="text-[#39ff14] toxic-shadow text-xl mb-2">{title}</h3>
           {show_price ? (
             <p className="text-[#39ff14] toxic-shadow text-3xl font-bold mb-4">
@@ -65,10 +68,27 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
               </p>
             </div>
           )}
-          {show_stock && (
+          {/* {show_stock && (
             <p className="text-[#39ff14] text-sm mt-2">
               Stock: {stock} {stock === 1 ? 'unit' : 'units'} available
             </p>
+          )} */}
+
+          {show_groups && groups && groups.length > 0 && (
+            <div className="absolute bottom-2 right-2 flex gap-2 bg-black	opacity-30 p-1 rounded-full">  {/* Updated positioning */}
+              {groups.map((group, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-1"
+                  title={typeof group === 'string' ? group : group?.name}
+                >
+                  <div
+                    className="w-2 h-2 opacity-100 hover:opacity-100 rounded-full cursor-pointer"
+                    style={{ backgroundColor: group?.color || '#808080' }}
+                  />
+                </div>
+              ))}
+            </div>
           )}
           </div>
       </div>

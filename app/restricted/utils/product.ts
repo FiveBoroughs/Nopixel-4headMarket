@@ -10,7 +10,8 @@ export type Product = {
   categories?: string[];
   sort?: number;
   enabled: boolean;
-  group?: string[];
+  groups?: Group[];
+  show_groups: boolean;
 };
 
 type nocoResponse = {
@@ -23,13 +24,31 @@ type nocoResponse = {
     show_stock: boolean;
     image: string;
     warning?: string;
-    categories?: string[];
+    categories?: string;
     sort: number;
     enabled: boolean;
-    group?: string[];
+    groups?: string;
+    show_groups: boolean;
   }>,
   pageInfo: PaginatedType
 }
+
+export type Group = {
+  name: string;
+  color: string;
+}
+
+export const GROUP_COLORS: Record<string, Group> = {
+  'besties': { name: 'Besties', color: '#f472b6' },
+  'sob': { name: 'SOB', color: '#64748b' },
+  'cypress': { name: 'Cypress', color: '#431407' },
+  'vagos': { name: 'Vagos', color: '#facc15' },
+  'hades': { name: 'Hydra', color: '#dc2626' },
+  'cl': { name: 'Chaos Legion', color: '#4d7c0f' },
+  'hydra': { name: 'Hydra', color: '#4d7c0f' },
+  'manor': { name: 'Manor', color: '#1e40af' },
+};
+
 import { Api, PaginatedType } from "nocodb-sdk";
 
 const api = new Api({
@@ -60,12 +79,12 @@ export async function getProducts(): Promise<Product[]> {
       show_stock: record.show_stock,
       image: record.image,
       warning: record.warning,
-      categories: record.categories,
+      categories: record.categories ? record.categories.split(',').map(cat => cat.trim()) : undefined,
       sort: record.sort,
       enabled: record.enabled,
-      group: record.group
+      groups: record.groups ? record.groups.split(',').map(g => GROUP_COLORS[g.trim()]) : undefined,
+      show_groups: record.show_groups,
     })).filter(x => x.enabled).sort((x, y) => y.sort - x.sort);
-
     return products;
   } catch (error) {
     console.error('Failed to fetch products:', error);

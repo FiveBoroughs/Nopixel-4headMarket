@@ -72,11 +72,9 @@ export default function RestrictedPage() {
     );
   }
 
-  // New function to group products by category
+  // Group products by category
   const groupedProducts = products.reduce((acc, product) => {
-    const categories = Array.isArray(product.categories)
-      ? product.categories
-      : [product.categories || 'Uncategorized'];
+    const categories = product.categories || ['Uncategorized'];
 
     categories.forEach(category => {
       if (!acc[category]) {
@@ -111,7 +109,8 @@ export default function RestrictedPage() {
                   warning={product.warning}
                   enabled={product.enabled}
                   categories={product.categories}
-                  group={product.group}
+                  groups={product.groups}
+                  show_groups={product.show_groups}
                   sort={product.sort}
                 />
               ))}
