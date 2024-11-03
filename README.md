@@ -32,10 +32,8 @@ npm install
 ```
 
 3. Set up environment variables:
-```env
-NEXT_PUBLIC_AIRTABLE_BASE_ID=your_base_id
-NEXT_PUBLIC_AIRTABLE_TABLE_ID=your_table_id
-NEXT_PUBLIC_AIRTABLE_API_KEY=your_api_key
+```bash
+cp .env.example .env.local && nvim .env.local
 ```
 
 4. Run the development server:

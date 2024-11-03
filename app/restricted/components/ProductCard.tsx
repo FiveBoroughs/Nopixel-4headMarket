@@ -37,9 +37,9 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
             className="object-contain opacity-80 hover:opacity-100 transition-opacity p-5"
           />
           {warning && (
-          <div className="absolute top-2 right-2 bg-[#8b0000] px-3 py-1 rounded-full flex items-center gap-1">
-            <AlertTriangle className="w-5 h-5 text-black" />
-            <span className="font-mono">{warning}</span>
+          <div className="absolute top-2 right-2 ml-2 bg-[#8b0000] px-2 py-1 rounded-full flex items-center justify-center gap-1">
+            <AlertTriangle className="w-5 h-5 text-black -mt-[2px]" />
+            <span className="font-mono flex items-center">{warning}</span>
           </div>
           )}
           {show_stock && (
@@ -75,7 +75,7 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           )} */}
 
           {show_groups && groups && groups.length > 0 && (
-            <div className="absolute bottom-2 right-2 flex gap-2 bg-black	opacity-30 p-1 rounded-full">  {/* Updated positioning */}
+            <div className="absolute bottom-2 right-2 flex gap-2 bg-black	opacity-30 hover:opacity-100 p-1 rounded-full">  {/* Updated positioning */}
               {groups.map((group, index) => (
                 <div
                   key={index}
@@ -83,7 +83,7 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
                   title={typeof group === 'string' ? group : group?.name}
                 >
                   <div
-                    className="w-2 h-2 opacity-100 hover:opacity-100 rounded-full cursor-pointer"
+                    className="w-2 h-2 opacity-100 rounded-full cursor-pointer"
                     style={{ backgroundColor: group?.color || '#808080' }}
                   />
                 </div>

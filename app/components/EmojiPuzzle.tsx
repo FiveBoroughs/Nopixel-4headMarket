@@ -24,16 +24,21 @@ export default function EmojiPuzzle() {
   const [selected, setSelected] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [dailyPassword, setDailyPassword] = useState<{ emoji_1: string; emoji_2: string }>({ emoji_1: "🐕", emoji_2: "📏" });
+  const [emojiGrid, setEmojiGrid] = useState<string[]>([]);
+  const [timeLeft, setTimeLeft] = useState<number>(10);
+  const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const pressSound = useRef<HTMLAudioElement | null>(null);
   const successSound = useRef<HTMLAudioElement | null>(null);
   const errorSound = useRef<HTMLAudioElement | null>(null);
-  const [emojiGrid, setEmojiGrid] = useState<string[]>([]); // Add this line
 
   useEffect(() => {
     pressSound.current = new Audio('/sounds/select.mp3');
     successSound.current = new Audio('/sounds/success.mp3');
     errorSound.current = new Audio('/sounds/error.mp3');
 
+  }, []);
+
+  useEffect(() => {
     const fetchSequence = async () => {
       const decryptSequence = await getDecryptSequence();
       setDailyPassword(decryptSequence);
@@ -58,6 +63,37 @@ export default function EmojiPuzzle() {
     fetchSequence();
   }, []);
 
+
+  // Add timer effect
+  useEffect(() => {
+    if (timeLeft > 0) {
+      timerRef.current = setInterval(() => {
+        setTimeLeft(prev => prev - 0.1);
+      }, 100) as NodeJS.Timeout;  // Add type assertion here
+    } else {
+      resetTimer();
+    }
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [timeLeft, dailyPassword]);
+
+  const resetTimer = () => {
+    setTimeLeft(10);
+    setSelected([]);
+
+    // Shuffle grid without making new request
+    let availableEmojis = new Set(BASE_EMOJI_GRID);
+    availableEmojis.delete(dailyPassword.emoji_1);
+    availableEmojis.delete(dailyPassword.emoji_2);
+    let shuffledBase = shuffleArray(Array.from(availableEmojis));
+    let finalGrid = shuffledBase.slice(0, 23);
+    finalGrid.push(dailyPassword.emoji_1, dailyPassword.emoji_2);
+    errorSound.current?.play().catch(console.error);
+    setEmojiGrid(shuffleArray(finalGrid));
+  };
+
   const handleEmojiClick = (emoji: string) => {
     try {
       if (isLoading || !dailyPassword) return;
@@ -79,6 +115,9 @@ export default function EmojiPuzzle() {
         if (newSelected[0] === dailyPassword.emoji_1 && newSelected[1] === dailyPassword.emoji_2) {
           // Success condition
           successSound.current?.play().catch(console.error);
+
+          // Clear the timer
+          if (timerRef.current) clearInterval(timerRef.current);
 
           // Create and show popup
           const popup = document.createElement('div');
@@ -116,24 +155,32 @@ export default function EmojiPuzzle() {
       )}
       <div className="mt-8 bg-black/50 p-6 border border-[#39ff14] rounded-lg backdrop-blur-sm">
         <h3 className="text-xl text-[#39ff14] toxic-shadow mb-4">DECRYPT SEQUENCE</h3>
-        <div className="grid grid-cols-5 gap-4 max-w-md mx-auto">
-          {emojiGrid.map((emoji, index) => (
-            <button
-              key={index}
-              onClick={() => handleEmojiClick(emoji)}
-              className={`text-2xl p-2 rounded-lg transition-all duration-300 ${
-                selected.includes(emoji)
-                ? 'bg-[#8b0000] scale-110'
-                : 'bg-black/30 hover:bg-[#39ff14]/20'
-              }`}
-              >
-              {emoji}
-            </button>
-          ))}
-        </div>
+        <div className="max-w-md mx-auto">
+          <div className="grid grid-cols-5 gap-4">
+            {emojiGrid.map((emoji, index) => (
+              <button
+                key={index}
+                onClick={() => handleEmojiClick(emoji)}
+                className={`text-2xl p-2 rounded-lg transition-all duration-300 ${
+                  selected.includes(emoji)
+                  ? 'bg-[#8b0000] scale-110'
+                  : 'bg-black/30 hover:bg-[#39ff14]/20'
+                }`}
+                >
+                {emoji}
+              </button>
+            ))}
+          </div>
           <div className="mt-4 text-center text-sm text-gray-500">
             Selected: {selected.join(' ')} {selected.length}/2
           </div>
+          <div className="w-full h-1 bg-gray-700 rounded-full my-2">
+            <div
+              className="h-full bg-[#39ff14] rounded-full transition-all duration-100"
+              style={{ width: `${(timeLeft / 10) * 100}%` }}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
