@@ -1,13 +1,58 @@
 "use client";
-import { useState, useEffect, useRef } from 'react';
-import { DecryptSequence, getDecryptSequence } from '../utils/decryptSequence'
+import { useState, useEffect, useRef } from "react";
+import { DecryptSequence, getDecryptSequence } from "../utils/decryptSequence";
 
 let BASE_EMOJI_GRID = [
-  '🐈', '🌟', '🦊', '🐕', '💀', '🌙', '🔥', '🦁', '🎭', '🐍',
-  '👾', '🎪', '🦇', '🎡', '🐘', '🌋', '🗿', '🦖', '🐪', '🎢',
-  '🎠', '🦅', '📏', '🐋', '🦕', '🌈', '🎨', '🎯', '🎲', '🎸',
-  '🌺', '🍄', '🦚', '🦈', '🦩', '🦒', '🦘', '🦫', '🦥', '🦦',
-  '🦡', '🦨', '🦔', '🦃', '🦢', '🦜', '🦤', '🦋', '🐌', '🐞'
+  "🐈",
+  "🌟",
+  "🦊",
+  "🐕",
+  "💀",
+  "🌙",
+  "🔥",
+  "🦁",
+  "🎭",
+  "🐍",
+  "👾",
+  "🎪",
+  "🦇",
+  "🎡",
+  "🐘",
+  "🌋",
+  "🗿",
+  "🦖",
+  "🐪",
+  "🎢",
+  "🎠",
+  "🦅",
+  "📏",
+  "🐋",
+  "🦕",
+  "🌈",
+  "🎨",
+  "🎯",
+  "🎲",
+  "🎸",
+  "🌺",
+  "🍄",
+  "🦚",
+  "🦈",
+  "🦩",
+  "🦒",
+  "🦘",
+  "🦫",
+  "🦥",
+  "🦦",
+  "🦡",
+  "🦨",
+  "🦔",
+  "🦃",
+  "🦢",
+  "🦜",
+  "🦤",
+  "🦋",
+  "🐌",
+  "🐞",
 ];
 
 function shuffleArray(emoji_grid: string[]): string[] {
@@ -23,7 +68,10 @@ function shuffleArray(emoji_grid: string[]): string[] {
 export default function EmojiPuzzle() {
   const [selected, setSelected] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [dailyPassword, setDailyPassword] = useState<{ emoji_1: string; emoji_2: string }>({ emoji_1: "🐕", emoji_2: "📏" });
+  const [dailyPassword, setDailyPassword] = useState<{
+    emoji_1: string;
+    emoji_2: string;
+  }>({ emoji_1: "📏", emoji_2: "🐕" });
   const [emojiGrid, setEmojiGrid] = useState<string[]>([]);
   const [timeLeft, setTimeLeft] = useState<number>(10);
   const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
@@ -32,21 +80,20 @@ export default function EmojiPuzzle() {
   const errorSound = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    pressSound.current = new Audio('/sounds/select.mp3');
-    successSound.current = new Audio('/sounds/success.mp3');
-    errorSound.current = new Audio('/sounds/error.mp3');
-
+    pressSound.current = new Audio("/sounds/select.mp3");
+    successSound.current = new Audio("/sounds/success.mp3");
+    errorSound.current = new Audio("/sounds/error.mp3");
   }, []);
 
   useEffect(() => {
     const fetchSequence = async () => {
       const decryptSequence = await getDecryptSequence();
-      setDailyPassword(decryptSequence);
+      if (decryptSequence) setDailyPassword(decryptSequence);
 
       // Create a set of available emojis (excluding password emojis)
       let availableEmojis = new Set(BASE_EMOJI_GRID);
-      availableEmojis.delete(decryptSequence.emoji_1);
-      availableEmojis.delete(decryptSequence.emoji_2);
+      availableEmojis.delete(dailyPassword.emoji_1);
+      availableEmojis.delete(dailyPassword.emoji_2);
       // Convert to array and shuffle
       let shuffledBase = shuffleArray(Array.from(availableEmojis));
 
@@ -54,7 +101,7 @@ export default function EmojiPuzzle() {
       let finalGrid = shuffledBase.slice(0, 23);
 
       // Add the daily password emojis
-      finalGrid.push(decryptSequence.emoji_1, decryptSequence.emoji_2);
+      finalGrid.push(dailyPassword.emoji_1, dailyPassword.emoji_2);
 
       // Shuffle again to randomize the positions
       setEmojiGrid(shuffleArray(finalGrid));
@@ -63,13 +110,12 @@ export default function EmojiPuzzle() {
     fetchSequence();
   }, []);
 
-
   // Add timer effect
   useEffect(() => {
     if (timeLeft > 0) {
       timerRef.current = setInterval(() => {
-        setTimeLeft(prev => prev - 0.1);
-      }, 100) as NodeJS.Timeout;  // Add type assertion here
+        setTimeLeft((prev) => prev - 0.1);
+      }, 100) as NodeJS.Timeout; // Add type assertion here
     } else {
       resetTimer();
     }
@@ -100,7 +146,7 @@ export default function EmojiPuzzle() {
       // If already selected, deselect it
       if (selected.includes(emoji)) {
         pressSound.current?.play().catch(console.error);
-        setSelected(selected.filter(e => e !== emoji));
+        setSelected(selected.filter((e) => e !== emoji));
         return;
       }
 
@@ -112,7 +158,10 @@ export default function EmojiPuzzle() {
       // Check conditions when two emojis are selected
       if (newSelected.length === 2) {
         setIsLoading(true);
-        if (newSelected[0] === dailyPassword.emoji_1 && newSelected[1] === dailyPassword.emoji_2) {
+        if (
+          newSelected[0] === dailyPassword.emoji_1 &&
+          newSelected[1] === dailyPassword.emoji_2
+        ) {
           // Success condition
           successSound.current?.play().catch(console.error);
 
@@ -120,8 +169,9 @@ export default function EmojiPuzzle() {
           if (timerRef.current) clearInterval(timerRef.current);
 
           // Create and show popup
-          const popup = document.createElement('div');
-          popup.className = 'fixed inset-0 flex items-center justify-center z-50';
+          const popup = document.createElement("div");
+          popup.className =
+            "fixed inset-0 flex items-center justify-center z-50";
           popup.innerHTML = `
           <div class="bg-black/90 border-2 border-[#39ff14] p-8 rounded-lg">
             <h2 class="text-[#39ff14] text-4xl toxic-shadow animate-pulse">ACCESS GRANTED</h2>
@@ -130,7 +180,7 @@ export default function EmojiPuzzle() {
           document.body.appendChild(popup);
 
           setTimeout(() => {
-            window.location.href = '/restricted';
+            window.location.href = "/restricted";
           }, 1500);
         } else {
           // Wrong combination
@@ -140,21 +190,23 @@ export default function EmojiPuzzle() {
         setIsLoading(false);
       }
     } catch (err) {
-      console.error('Error in emoji selection:', err);
+      console.error("Error in emoji selection:", err);
       setIsLoading(false);
       setSelected([]);
     }
   };
 
   return (
-    <div >
+    <div>
       {isLoading && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="text-[#39ff14] animate-pulse">PROCESSING...</div>
         </div>
       )}
       <div className="mt-8 bg-black/50 p-6 border border-[#39ff14] rounded-lg backdrop-blur-sm">
-        <h3 className="text-xl text-[#39ff14] toxic-shadow mb-4">DECRYPT SEQUENCE</h3>
+        <h3 className="text-xl text-[#39ff14] toxic-shadow mb-4">
+          DECRYPT SEQUENCE
+        </h3>
         <div className="max-w-md mx-auto">
           <div className="grid grid-cols-5 gap-4">
             {emojiGrid.map((emoji, index) => (
@@ -163,16 +215,16 @@ export default function EmojiPuzzle() {
                 onClick={() => handleEmojiClick(emoji)}
                 className={`text-2xl p-2 rounded-lg transition-all duration-300 ${
                   selected.includes(emoji)
-                  ? 'bg-[#8b0000] scale-110'
-                  : 'bg-black/30 hover:bg-[#39ff14]/20'
+                    ? "bg-[#8b0000] scale-110"
+                    : "bg-black/30 hover:bg-[#39ff14]/20"
                 }`}
-                >
+              >
                 {emoji}
               </button>
             ))}
           </div>
           <div className="mt-4 text-center text-sm text-gray-500">
-            Selected: {selected.join(' ')} {selected.length}/2
+            Selected: {selected.join(" ")} {selected.length}/2
           </div>
           <div className="w-full h-1 bg-gray-700 rounded-full my-2">
             <div
