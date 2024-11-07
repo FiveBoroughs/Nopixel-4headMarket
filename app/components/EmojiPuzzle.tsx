@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { DecryptSequence, getDecryptSequence } from "../utils/decryptSequence";
 
 let BASE_EMOJI_GRID = [
@@ -72,6 +72,7 @@ function shuffleArray(emoji_grid: string[]): string[] {
 
 // Creates an emoji grid containing the target sequence emojis and random decoys
 const generateShuffledGrid = (sequence: DecryptSequence) => {
+  console.log('gen', sequence)
   let availableEmojis = new Set(BASE_EMOJI_GRID);
   sequence.emojis.forEach(emoji => availableEmojis.delete(emoji));
   let shuffledBase = shuffleArray(Array.from(availableEmojis));
@@ -92,13 +93,21 @@ export default function EmojiPuzzle() {
   const successSound = useRef<HTMLAudioElement | null>(null);
   const errorSound = useRef<HTMLAudioElement | null>(null);
 
+  // Reset puzzle state when timer expires
+  const resetTimer = useCallback(() => {
+    setTimeLeft(TIMER_DURATION);
+    //Only play error sound on timer reset if a sequence was attempted
+    if (selectedSequence.length > 0) errorSound.current?.play().catch(console.error);
+    setSelectedSequence([]);
+    setEmojiGrid(generateShuffledGrid(dailySequence));
+  }, [dailySequence, selectedSequence]);
+
   // Initialize audio elements on component mount
   useEffect(() => {
     pressSound.current = new Audio("/sounds/select.mp3");
     successSound.current = new Audio("/sounds/success.mp3");
     errorSound.current = new Audio("/sounds/error.mp3");
   }, []);
-
 
   // Fetch the daily decrypt sequence on component mount
   useEffect(() => {
@@ -127,16 +136,7 @@ export default function EmojiPuzzle() {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [timeLeft, dailySequence]);
-
-  // Reset puzzle state when timer expires
-  const resetTimer = () => {
-    setTimeLeft(TIMER_DURATION);
-    //Only play error sound on timer reset if a sequence was attempted
-    if (selectedSequence.length > 0) errorSound.current?.play().catch(console.error);
-    setSelectedSequence([]);
-    setEmojiGrid(generateShuffledGrid(dailySequence));
-  };
+  }, [timeLeft, dailySequence, resetTimer]);
 
   // Handle emoji selection and sequence validation
   const handleEmojiClick = (emoji: string) => {
