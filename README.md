@@ -23,6 +23,11 @@ This is a fictional project created for entertainment purposes only. All content
 - Category-based product organization
 - Real-time product updates via Airtable
 
+## 🖼️ Screenshots
+
+![Landing Page](assets/Screenshot.png)
+*Emoji puzzle*
+
 ## 🚀 Getting Started
 
 1. Clone the repository
