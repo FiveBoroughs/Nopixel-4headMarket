@@ -6,10 +6,16 @@ export default function Disclaimer() {
   return (
     <main className="min-h-screen bg-black p-8">
       <div className="max-w-2xl mx-auto bg-black/50 p-6 border border-[#39ff14] rounded-lg backdrop-blur-sm">
-        <h1 className="text-3xl text-[#39ff14] mb-6 toxic-shadow">DISCLAIMER</h1>
+        <h1 className="text-3xl text-[#39ff14] mb-6 toxic-shadow">
+          DISCLAIMER
+        </h1>
 
         <div className="space-y-4 text-gray-300">
-          <p>This website is part of a fictional game experience. All content, including text, images, and interactions, is entirely fictional and created for entertainment purposes only.</p>
+          <p>
+            This website is part of a fictional game experience. All content,
+            including text, images, and interactions, is entirely fictional and
+            created for entertainment purposes only.
+          </p>
 
           <p>Please note:</p>
           <ul className="list-disc pl-6 space-y-2">
@@ -19,12 +25,16 @@ export default function Disclaimer() {
             <li>This is purely for entertainment and gaming purposes</li>
           </ul>
 
-          <p>By using this website, you acknowledge that you understand its fictional nature and are engaging with it solely for entertainment purposes.</p>
+          <p>
+            By using this website, you acknowledge that you understand its
+            fictional nature and are engaging with it solely for entertainment
+            purposes.
+          </p>
 
           <br />
 
           <Link href="https://nopixel.fandom.com/wiki/Aubrey_Webster">
-            Nopixel Wiki
+            🔗 Nopixel Wiki
           </Link>
         </div>
 

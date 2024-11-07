@@ -33,7 +33,7 @@ This is a fictional project created for entertainment purposes only. All content
 1. Clone the repository
 2. Install dependencies:
 ```bash
-npm install
+pnpm install
 ```
 
 3. Set up environment variables:
@@ -43,10 +43,10 @@ cp .env.example .env.local && nvim .env.local
 
 4. Run the development server:
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 5. Build for production:
 ```bash
-npm run build
+pnpm run build
 ```

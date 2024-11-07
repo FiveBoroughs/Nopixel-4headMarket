@@ -55,7 +55,7 @@ let BASE_EMOJI_GRID = [
   "🐞",
 ];
 // Fallback sequence used before the daily sequence is loaded
-const DEFAULT_SEQUENCE = { id: 0, emojis: ["📏","🐕"] };
+const DEFAULT_SEQUENCE = { id: 0, emojis: ["📏", "🐕"] };
 const TIMER_DURATION = 10;
 const GRID_SIZE = 25;
 
@@ -72,11 +72,10 @@ function shuffleArray(emoji_grid: string[]): string[] {
 
 // Creates an emoji grid containing the target sequence emojis and random decoys
 const generateShuffledGrid = (sequence: DecryptSequence) => {
-  console.log('gen', sequence)
   let availableEmojis = new Set(BASE_EMOJI_GRID);
-  sequence.emojis.forEach(emoji => availableEmojis.delete(emoji));
+  sequence.emojis.forEach((emoji) => availableEmojis.delete(emoji));
   let shuffledBase = shuffleArray(Array.from(availableEmojis));
-  let finalGrid = shuffledBase.slice(0, GRID_SIZE-sequence.emojis.length);
+  let finalGrid = shuffledBase.slice(0, GRID_SIZE - sequence.emojis.length);
   finalGrid = [...finalGrid, ...sequence.emojis];
   return shuffleArray(finalGrid);
 };
@@ -85,8 +84,11 @@ export default function EmojiPuzzle() {
   const [selectedSequence, setSelectedSequence] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const [dailySequence, setdailySequence] = useState<DecryptSequence>(DEFAULT_SEQUENCE);
-  const [emojiGrid, setEmojiGrid] = useState<string[]>(() => generateShuffledGrid(DEFAULT_SEQUENCE));
+  const [dailySequence, setdailySequence] =
+    useState<DecryptSequence>(DEFAULT_SEQUENCE);
+  const [emojiGrid, setEmojiGrid] = useState<string[]>(() =>
+    generateShuffledGrid(DEFAULT_SEQUENCE),
+  );
   const [timeLeft, setTimeLeft] = useState<number>(10);
   const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const pressSound = useRef<HTMLAudioElement | null>(null);
@@ -97,7 +99,8 @@ export default function EmojiPuzzle() {
   const resetTimer = useCallback(() => {
     setTimeLeft(TIMER_DURATION);
     //Only play error sound on timer reset if a sequence was attempted
-    if (selectedSequence.length > 0) errorSound.current?.play().catch(console.error);
+    if (selectedSequence.length > 0)
+      errorSound.current?.play().catch(console.error);
     setSelectedSequence([]);
     setEmojiGrid(generateShuffledGrid(dailySequence));
   }, [dailySequence, selectedSequence]);
@@ -113,7 +116,7 @@ export default function EmojiPuzzle() {
   useEffect(() => {
     const fetchSequence = async () => {
       const decryptSequence = await getDecryptSequence();
-      if (decryptSequence) {
+      if (decryptSequence && decryptSequence.emojis.length >= 1) {
         setdailySequence(decryptSequence);
         setEmojiGrid(generateShuffledGrid(decryptSequence));
       }
@@ -132,7 +135,7 @@ export default function EmojiPuzzle() {
       resetTimer();
     }
 
-     // Cleanup interval on unmount or when timeLeft changes
+    // Cleanup interval on unmount or when timeLeft changes
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
@@ -160,7 +163,11 @@ export default function EmojiPuzzle() {
         setIsLoading(true);
 
         // Check if sequence matches the daily target
-        if (newSelected.every((emoji, index) => emoji === dailySequence.emojis[index])) {
+        if (
+          newSelected.every(
+            (emoji, index) => emoji === dailySequence.emojis[index],
+          )
+        ) {
           // Handle successful sequence match
           successSound.current?.play().catch(console.error);
           if (timerRef.current) clearInterval(timerRef.current);
@@ -230,7 +237,8 @@ export default function EmojiPuzzle() {
 
           {/* Selection status display */}
           <div className="mt-4 text-center text-sm text-gray-500">
-            Selected: {selectedSequence.join(" ")} {selectedSequence.length}/{dailySequence.emojis.length}
+            Selected: {selectedSequence.join(" ")} {selectedSequence.length}/
+            {dailySequence.emojis.length}
           </div>
 
           {/* Timer progress bar */}
