@@ -132,8 +132,9 @@ export default function EmojiPuzzle() {
   // Reset puzzle state when timer expires
   const resetTimer = () => {
     setTimeLeft(TIMER_DURATION);
+    //Only play error sound on timer reset if a sequence was attempted
+    if (selectedSequence.length > 0) errorSound.current?.play().catch(console.error);
     setSelectedSequence([]);
-    errorSound.current?.play().catch(console.error);
     setEmojiGrid(generateShuffledGrid(dailySequence));
   };
 
