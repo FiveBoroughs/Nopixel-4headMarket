@@ -11,7 +11,7 @@ This is a fictional project created for entertainment purposes only. All content
 - **Framework**: Next.js 15
 - **Styling**: Tailwind CSS
 - **UI Components**: Radix UI + shadcn/ui
-- **Data Storage**: Airtable
+- **Data Storage**: Airtable/NoccoDB
 - **Analytics**: Umami
 
 ## 🌟 Features
