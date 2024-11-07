@@ -1,7 +1,6 @@
 export type DecryptSequence = {
-  id: string;
-  emoji_1: string;
-  emoji_2: string;
+  id: number;
+  emojis: string[];
 };
 
 type nocoResponse = {
@@ -34,9 +33,8 @@ export async function getDecryptSequence(): Promise<DecryptSequence> {
       }
     );
     const decryptSequence = (response as nocoResponse).list.map((record: any) => ({
-      id: record.Id,
-      emoji_1: record.emoji_1,
-      emoji_2: record.emoji_2,
+      id: record.Id as number,
+      emojis: [].concat(record.emoji_1 || []).concat(record.emoji_2 || []).concat(record.emoji_3 || []).concat(record.emoji_4 || [])
     }));
 
     return decryptSequence[0];
